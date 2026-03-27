@@ -1,4 +1,5 @@
+Flask
+Flask-Cors
 pymongo
-flask
-flask_cors
-dotenv
+python-dotenv
+pytest

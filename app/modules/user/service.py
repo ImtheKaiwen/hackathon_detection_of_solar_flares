@@ -1,7 +1,6 @@
-from app.extensions import db_manager
 from bson import ObjectId  
 
-def register_user(data: dict):
+def register_user(data: dict, collection):
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
@@ -9,8 +8,6 @@ def register_user(data: dict):
     if not (username and email and password):
         return None, "Eksik bilgi girdiniz (kullanıcı adı, e-posta veya şifre eksik)."
 
-    collection = db_manager.get_collection('user')
-    
     if collection is None:
         print("Veritabanı bağlantısı yok veya koleksiyon bulunamadı.", flush=True)
         return None, "Veritabanı bağlantısı kurulamadı."
@@ -37,15 +34,13 @@ def register_user(data: dict):
 
     return None, "Bilinmeyen bir hata oluştu."
 
-def login_user(data: dict):
+def login_user(data: dict, collection):
     username = data.get('username')
     password = data.get('password')
     
     if username is None or password is None:
         return None, "Kullanıcı adı veya şifre eksik."
 
-    collection = db_manager.get_collection("user")
-    
     if collection is None:
         print("Veritabanı bağlantısı yok veya koleksiyon bulunamadı.", flush=True)
         return None, "Veritabanı bağlantısı kurulamadı."
@@ -60,5 +55,3 @@ def login_user(data: dict):
     except Exception as e:
         print("Giriş hatası:", e, flush=True)
         return None, f"Veritabanı hatası: {str(e)}"
-            
-    return None, "Bilinmeyen bir hata oluştu."

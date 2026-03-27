@@ -6,13 +6,10 @@ class DatabaseManager:
 
     def init_database(self, URI, DB_NAME):
         try:
-            self.client = MongoClient(URI, serverSelectionTimeoutMS=3000)
-            self.client.server_info() 
+            self.client = MongoClient(URI)
             self.db = self.client[DB_NAME]
             self.initialized = True
-            print("Mongo bağlandı")
         except Exception as e:
-            print("Mongo bağlantı hatası:", e)
             self.initialized = False
     
     def get_collection(self, collection_name):
