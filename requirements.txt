@@ -3,3 +3,7 @@ Flask-Cors
 pymongo
 python-dotenv
 pytest
+scikit-learn
+numpy
+pandas
+joblib
