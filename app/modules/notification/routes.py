@@ -19,7 +19,7 @@ def alert():
         }), 403
 
     # 🗄️ VERİTABANI BAĞLANTISI
-    collection = db_manager.get_collection('user')
+    collection = db_manager.get_collection('users')
     if collection is None:
         return jsonify({'status': False, 'message': 'Veritabanı bağlantı hatası'}), 500
     
