@@ -7,12 +7,10 @@ notification_bp = Blueprint('notification', __name__, url_prefix='/notify')
 
 @notification_bp.route('/alert', methods=['POST'])
 def alert():
-    # 🔐 API Key Kontrolü
     api_key = request.headers.get('X-API-KEY')
     if api_key != os.getenv("ALERT_API_KEY"):
         return jsonify({'status': False, 'message': 'Yetkisiz erişim!'}), 403
 
-    # 🗄️ Veritabanından Kullanıcıları Çek
     collection = db_manager.get_collection('users')
     all_users = list(collection.find())
     emails = [u.get('email') for u in all_users if u.get('email')]
@@ -20,9 +18,8 @@ def alert():
     if not emails:
         return jsonify({'status': False, 'message': 'Gönderilecek mail adresi bulunamadı.'}), 404
 
-    # 📈 Aktivite Seviyesini Al (Yoksa varsayılan 70)
     activity_level = 70
-    data = request.get_json(silent=True) # 400 hatasını önlemek için silent=True yaptık
+    data = request.get_json(silent=True)
     if data and 'activity_level' in data:
         activity_level = int(data['activity_level'])
 

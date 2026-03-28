@@ -11,12 +11,10 @@ def send_email_notification(to_email: str, subject: str, content: str, activity_
     msg['To'] = to_email
     msg['Subject'] = subject
 
-    # 🔥 Dinamik CSS Sınıfı
     card_class = "warning" # Varsayılan %70+ (Kırmızı)
     if activity_level >= 80: 
         card_class = "danger" # %80+ (Koyu Kırmızı)
 
-    # Süslü parantez çakışmasını önlemek için CSS ayrı bir string olarak tanımlanıyor
     css_style = """
     <style>
         body, html {

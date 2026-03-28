@@ -13,6 +13,15 @@ def index():
 
 @main_bp.route("/dashboard", methods=['GET'])
 def dashboard():
-    if is_session_active():
-        return render_template('dashboard.html')
-    return redirect('/login')
+    # if is_session_active():
+    #     return render_template('dashboard.html')
+    # return redirect('/login')
+    return render_template('dashboard.html')
+
+@main_bp.route("/info", methods=['GET'])
+def info():
+    return render_template('info.html')
+
+@main_bp.route('/about', methods=['GET'])
+def abouth():
+    return render_template('about.html')
