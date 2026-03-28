@@ -6,3 +6,9 @@ pytest
 scikit-learn
 numpy
 pandas
+<<<<<<< Updated upstream
+=======
+joblib
+scipy
+tqdm
+>>>>>>> Stashed changes
