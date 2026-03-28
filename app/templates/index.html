@@ -1,13 +1,240 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solar Storm Watch | Ana Sayfa</title>
+  <link rel="icon" type="image/jpeg" href="../static/img/sun-logo.jpeg" />
+  <link rel="stylesheet" href="../static/css/style.css" />
 </head>
-<body>
-    <h1>welcome</h1>
-    <a href="/login">login</a>
-    <a href="/register">register</a>
+<body class="home-page">
+
+  <div class="solar-bg">
+    <div class="solar-image"></div>
+    <div class="solar-depth depth-1"></div>
+    <div class="solar-depth depth-2"></div>
+    <div class="solar-heat heat-1"></div>
+    <div class="solar-heat heat-2"></div>
+    <div class="solar-heat heat-3"></div>
+    <div class="solar-glow"></div>
+    <div class="solar-flare flare-1"></div>
+    <div class="solar-flare flare-2"></div>
+    <div class="solar-particles"></div>
+    <div class="solar-overlay"></div>
+  </div>
+
+  <header class="site-header transparent-header">
+    <div class="container header-inner">
+      <a href="/" class="brand">
+        <img src="../static/img/sun-logo.jpeg" alt="Logo" class="brand-logo" />
+        <span>BEACON OF HELIOS</span>
+      </a>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menüyü Aç/Kapat">
+        ☰
+      </button>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="/" class="active">Ana Sayfa</a>
+        <a href="/info">Bilgiler</a>
+        <a href="/dashboard">Canlı Veriler</a>
+        <a href="/about">Hakkımızda</a>
+        <a href="/register" class="nav-login">Kayıt Ol</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="home-main">
+    <section class="hero-section full-panel">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-content">
+            <span class="eyebrow">UZAY HAVASI ERKEN UYARI PLATFORMU</span>
+            <h1>Güneş Fırtınalarını Erken Fark Et, Etkilerini Önceden Gör</h1>
+            <p class="hero-text">
+              Güneş’te meydana gelen patlamalar, koronal kütle atımları ve manyetik olaylar;
+              iletişim, GPS, uydu ve bazı elektronik sistemleri etkileyebilir. Bu platform,
+              güneş fırtınalarını güçlü görsel tasarım ve anlaşılır veri panelleri ile sunmak için tasarlandı.
+            </p>
+
+            <div class="hero-actions">
+              <a  href="/info" class="btn btn-primary">Güneş Fırtınası Nedir?</a>
+              <a href="/register" class="btn btn-secondary">Kayıt Ol</a>
+            </div>
+
+            <div class="hero-stats card-grid-3">
+              <div class="interactive-card glass-hot">
+                <span>Güneş Rüzgarı</span>
+                <strong>643 km/s</strong>
+              </div>
+              <div class="interactive-card glass-hot">
+                <span>Jeomanyetik Seviye</span>
+                <strong>G3</strong>
+              </div>
+              <div class="interactive-card glass-hot">
+                <span>Risk Durumu</span>
+                <strong>Orta-Yüksek</strong>
+              </div>
+            </div>
+          </div>
+
+          <aside class="hero-side">
+            <div class="floating-panel glass-hot strong-panel">
+              <div class="panel-top">
+                <span class="badge live">CANLI</span>
+                <span class="small-text">Uzay Havası Özeti</span>
+              </div>
+
+              <h3>Bugünün Durumu</h3>
+
+              <div class="panel-list">
+                <div class="panel-item">
+                  <span>Güneş Aktivitesi</span>
+                  <strong>Yüksek</strong>
+                </div>
+                <div class="panel-item">
+                  <span>Manyetik Etki</span>
+                  <strong>Aktif</strong>
+                </div>
+                <div class="panel-item">
+                  <span>Aurora Olasılığı</span>
+                  <strong>Artışta</strong>
+                </div>
+                <div class="panel-item">
+                  <span>Uydu Riski</span>
+                  <strong>İzlenmeli</strong>
+                </div>
+              </div>
+
+              <a href="/dashboard" class="text-link">Detaylı panele git →</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="section warm-section">
+      <div class="container">
+        <div class="section-heading bright-heading">
+          <span class="section-tag">ÖNE ÇIKAN İÇERİKLER</span>
+          <h2>Güneş ve uzay havası hakkında öne çıkan içerikler</h2>
+          <p>
+            Güneş patlamaları, koronal kütle atımları, uzay havası etkileri ve erken uyarı mantığını
+            sade ama etkileyici bir tasarım ile inceleyebilirsin.
+          </p>
+        </div>
+
+        <div class="feature-grid">
+          <article class="feature-card hot-card">
+            <div class="feature-meta">TEMEL BİLGİ</div>
+            <h3>Güneş Fırtınası Nedir?</h3>
+            <p>
+              Güneş’ten gelen yüklü parçacıkların Dünya’nın manyetik alanıyla etkileşiminin temel mantığını öğren.
+            </p>
+            <a href="/info">Devamını Oku</a>
+          </article>
+
+          <article class="feature-card hot-card">
+            <div class="feature-meta">UZAY HAVASI</div>
+            <h3>Koronal Kütle Atımı ve Etkileri</h3>
+            <p>
+              CME olaylarının Dünya çevresindeki sistemleri nasıl etkileyebileceğini sade biçimde keşfet.
+            </p>
+            <a href="/info">İncele</a>
+          </article>
+
+          <article class="feature-card hot-card">
+            <div class="feature-meta">ERKEN UYARI</div>
+            <h3>Gerçek Zamanlı Risk Takibi</h3>
+            <p>
+              Güneş rüzgarı, jeomanyetik seviye ve tahmini risk durumlarını panel üzerinde görüntüle.
+            </p>
+            <a href="/dashboard">Panele Git</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section warm-section alt-warm">
+      <div class="container">
+        <div class="section-heading bright-heading">
+          <span class="section-tag">BİLGİLER</span>
+          <h2>Güneş Fırtınaları Hakkında Temel Bilgiler</h2>
+          <p>
+            Güneş fırtınalarının nasıl oluştuğunu, neden önemli olduğunu ve hangi sistemleri etkileyebileceğini incele.
+          </p>
+        </div>
+
+        <div class="info-highlight-grid">
+          <div class="info-box-hot">
+            <h3>Nasıl Oluşur?</h3>
+            <p>Aktif güneş bölgelerinde güçlü manyetik olaylar ve patlamalar sonrası oluşabilir.</p>
+          </div>
+
+          <div class="info-box-hot">
+            <h3>Dünya’yı Nasıl Etkiler?</h3>
+            <p>Uydu sistemleri, GPS, radyo iletişimi ve bazı teknolojik altyapılar etkilenebilir.</p>
+          </div>
+
+          <div class="info-box-hot">
+            <h3>Neden İzlenmeli?</h3>
+            <p>Erken uyarı yaklaşımı sayesinde kritik sistemler için önceden önlem alınabilir.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section warm-section">
+      <div class="container">
+        <div class="section-heading bright-heading">
+          <span class="section-tag">CANLI PANEL</span>
+          <h2>Gösterge Paneli</h2>
+          <p>
+            Anlık veriler, risk seviyesi, kullanıcı bilgisi ve alarm durumları tek sayfada sunulabilir.
+          </p>
+        </div>
+
+        <div class="dashboard-preview-grid">
+          <div class="metric-card hot-card metric-big">
+            <span>Jeomanyetik Seviye</span>
+            <strong>G3</strong>
+          </div>
+          <div class="metric-card hot-card metric-big">
+            <span>Güneş Rüzgarı</span>
+            <strong>643 km/s</strong>
+          </div>
+          <div class="metric-card hot-card metric-big">
+            <span>Tahmini Risk</span>
+            <strong>Orta-Yüksek</strong>
+          </div>
+          <div class="metric-card hot-card metric-big">
+            <span>Aktivite Durumu</span>
+            <strong>Yüksek</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer warm-footer">
+    <div class="container footer-inner">
+      <div>
+        <div class="footer-brand">
+          <img src="../static/img/sun-logo.jpeg" alt="Logo" class="brand-logo small-logo" />
+          <h3>BEACON OF HELIOS</h3>
+        </div>
+        <p>Hackathon için hazırlanmış uzay havası erken uyarı web sitesi.</p>
+      </div>
+      <!-- <div class="footer-links">
+        <a href="index.html">Ana Sayfa</a>
+        <a href="info.html">Bilgiler</a>
+        <a href="dashboard.html">Canlı Veriler</a>
+        <a href="about.html">Hakkımızda</a>
+        <a href="login.html">Giriş</a>
+      </div> -->
+    </div>
+  </footer>
+
+  <script src="../static/js/app.js"></script>
 </body>
 </html>

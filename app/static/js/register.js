@@ -1,35 +1,58 @@
-const btnRegister = document.getElementById('register');
+// routing to main menu
+function index() {
+    window.location.href = '/'
+}
 
-btnRegister.addEventListener('click', () => {
-    const username = document.getElementById('username').value;
+const btnMainMenu = document.getElementById('index-btn');
+
+btnMainMenu.addEventListener('click', (e) => {
+    e.preventDefault()
+    index()
+})
+
+// register
+const btnRegister = document.getElementById('register-btn');
+
+btnRegister.addEventListener('click', async (event) => {
+    event.preventDefault(); 
+
+    const name = document.getElementById('name').value;
+    const surname = document.getElementById('surname').value;
     const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
 
-    fetch('/register', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ 'username': username, 'email': email, 'password': password })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Sunucudan olumsuz bir yanıt döndü.");
-        }
-        return response.json(); 
-    })
-    .then(result => {
-        if (result.status === true) {
-            console.log("Kayıt başarılı! Kullanıcı ID:", result.user_id);
-            alert("Kayıt başarılı!");
-            window.location.href = '/login'; 
+    try {
+        const response = await fetch('/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                surname: surname,
+                email: email
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.status == true) {
+            alert('Kayıt başarılı bir şekilde tamamlandı');
+            window.location.href = '/'; 
         } else {
-            console.log("Kayıt başarısız:", result.message);
-            alert("Kayıt işlemi başarısız oldu: " + (result.message || "Bilinmeyen hata"));
+            alert('Hata: ' + data.message);
+            clear_fields()
         }
-    })
-    .catch(error => {
-        console.error("Bir hata oluştu:", error);
-        alert("Sunucuya bağlanılamadı. Lütfen daha sonra tekrar deneyin.");
-    });
+
+    } catch (error) {
+        console.error('Hata:', error);
+        alert('Sunucuya bağlanırken hata oluştu');
+        clear_fields()
+    }
 });
+
+
+function clear_fields(){
+     const name = document.getElementById('name').value = ''
+    const surname = document.getElementById('surname').value = ''
+    const email = document.getElementById('email').value = ''
+}
