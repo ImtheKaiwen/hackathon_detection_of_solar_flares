@@ -7,92 +7,100 @@ from sklearn.preprocessing import MinMaxScaler
 from scipy import stats
 from tqdm import tqdm
 
-# --- AYARLAR ---
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(current_dir, 'veriler_72saat_filled_bunu_kullancaz.csv')
 output_name = os.path.join(current_dir, "SWANSF_FPCKNN_LSBZM_Final.csv")
 
 try:
-    print(f"--- FPCKNN + AKADEMİK LSBZM İşlemi Başladı ---")
+    print(f"--- Veri Yukleniyor ---")
     df = pd.read_csv(csv_path)
 
-    # 1. ADIM: SİLİNMESİNİ İSTEMEDİĞİMİZ SÜTUNLARI KENARA AYIRALIM
-    # Eğer bu sütunlar veride yoksa hata almamak için kontrol ekledik
-    protected_cols = ['id', 't_ranch', 'label'] 
-    existing_protected = [c for c in protected_cols if c in df.columns]
+    # 1. ADIM: Sütun Ayıklama
+    # Dokunulmayacaklar (Sayı olsa bile işleme girmeyecekler)
+    dont_touch = ['id', 't_ranch', 'harpnum', 'label']
     
-    # İşlem yapılacak sayısal veriyi ayır (ID ve T_RANCH'i buradan çıkarıyoruz)
-    features_to_process = df.drop(columns=existing_protected).select_dtypes(include=[np.number])
-    protected_df = df[existing_protected]
+    # Gerçekten sayı olan ve işlem yapılması gereken sütunları bulalım
+    # Sadece sayısal (int/float) tipindeki sütunları seçiyoruz
+    all_numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+    
+    # İşlem yapılacak sütunlar: Sayısal olanlar EKSİ dokunulmayacak olanlar
+    cols_to_fix = [c for c in all_numeric_cols if c not in dont_touch]
+
+    if not cols_to_fix:
+        raise ValueError("İşlem yapılacak sayısal sütun bulunamadı! Sütun tiplerini kontrol et.")
+
+    features_df = df[cols_to_fix].copy()
 
     # ==========================================
     # ADIM 2: FPCKNN (ATAMA)
     # ==========================================
-    print("FPCKNN Ataması yapılıyor...")
+    print("FPCKNN Atamasi yapiliyor...")
+    # Sadece sayısal özellikler üzerinden ortalama alarak KMeans için ön dolgu yapıyoruz
+    temp_fill = features_df.fillna(features_df.mean())
+    
     kmeans = KMeans(n_clusters=3, random_state=42, n_init=10)
-    # Kümeleri belirlemek için geçici doldurma
-    temp_fill = features_to_process.fillna(features_to_process.mean())
     clusters = kmeans.fit_predict(temp_fill)
-    features_to_process['cluster'] = clusters
+    features_df['cluster'] = clusters
 
     imputed_list = []
     for cid in range(3):
-        cluster_data = features_to_process[features_to_process['cluster'] == cid]
-        if cluster_data.isnull().sum().sum() > 0:
+        cluster_data = features_df[features_df['cluster'] == cid]
+        data_only = cluster_data.drop(columns=['cluster'])
+        
+        if data_only.isnull().sum().sum() > 0:
             imputer = KNNImputer(n_neighbors=5)
-            imputed_list.append(imputer.fit_transform(cluster_data))
+            imputed_data = imputer.fit_transform(data_only)
+            imputed_df = pd.DataFrame(imputed_data, columns=data_only.columns, index=data_only.index)
+            imputed_list.append(imputed_df)
         else:
-            imputed_list.append(cluster_data.values)
+            imputed_list.append(data_only)
     
-    df_imputed = pd.DataFrame(np.vstack(imputed_list), columns=features_to_process.columns).drop(columns=['cluster'])
+    df_imputed = pd.concat(imputed_list).sort_index()
     print("Atama Bitti.")
 
     # ==========================================
-    # ADIM 3: LSBZM (AKADEMİK NORMALİZASYON)
+    # ADIM 3: LSBZM (NORMALIZASYON)
     # ==========================================
-    print("Akademik LSBZM Normalizasyonu Başladı...")
-    data_array = df_imputed.values
-    num_rows, num_cols = data_array.shape
-    normalized_array = np.zeros((num_rows, num_cols))
+    print("LSBZM Normalizasyonu yapiliyor...")
     scaler = MinMaxScaler()
-
-    for j in tqdm(range(num_cols), desc="LSBZM İşleniyor"):
-        col = data_array[:, j]
-        the_min, the_max = np.min(col), np.max(col)
-        skewness = stats.skew(col)
-        std_val = np.std(col)
-
-        if std_val == 0:
-            normalized_col = np.ones(num_rows)
-        else:
-            # Skewness Karar Mekanizması
-            if (the_max - the_min > 100000) or (the_max < 1 and the_min > -1):
-                shift = 2 * abs(the_min) if the_min < 0 else 0.1
-                all_pos = col + shift
-                transformed = np.log(all_pos + 1e-9) if skewness > 1 else (np.sqrt(all_pos) if skewness < -1 else stats.zscore(col))
-            else:
-                if skewness > 1 or skewness < -1:
-                    shift = 2 * abs(the_min) if the_min < 0 else 0.1
-                    try: transformed, _ = stats.boxcox(col + shift)
-                    except: transformed = stats.zscore(col)
-                else:
-                    transformed = stats.zscore(col)
-
-            normalized_col = scaler.fit_transform(transformed.reshape(-1, 1)).flatten()
-        normalized_array[:, j] = normalized_col
-
-    # ==========================================
-    # ADIM 4: GERİ BİRLEŞTİRME (KORUNAN SÜTUNLARLA)
-    # ==========================================
-    df_final_features = pd.DataFrame(normalized_array, columns=df_imputed.columns)
     
-    # Kenara ayırdığımız id, t_ranch ve label'ı geri ekliyoruz
-    df_final = pd.concat([protected_df.reset_index(drop=True), df_final_features], axis=1)
+    for col_name in tqdm(cols_to_fix, desc="Islem Sirasi"):
+        col = df_imputed[col_name]
+        the_min, the_max = col.min(), col.max()
+        # varyans kontrolü (tüm değerler aynıysa normalizasyon hata verir)
+        if col.std() == 0:
+            df_imputed[col_name] = 0.0
+            continue
+            
+        skewness = stats.skew(col)
+        
+        # LSBZM + Skewness Logic
+        if (the_max - the_min > 100000) or (the_max < 1 and the_min > -1):
+            shift = 2 * abs(the_min) if the_min < 0 else 0.1
+            all_pos = col + shift
+            if skewness > 1: transformed = np.log(all_pos + 1e-9)
+            elif skewness < -1: transformed = np.sqrt(all_pos)
+            else: transformed = stats.zscore(col)
+        else:
+            if abs(skewness) > 1:
+                shift = 2 * abs(the_min) if the_min < 0 else 0.1
+                try: transformed, _ = stats.boxcox(col + shift)
+                except: transformed = stats.zscore(col)
+            else:
+                transformed = stats.zscore(col)
+
+        df_imputed[col_name] = scaler.fit_transform(np.array(transformed).reshape(-1, 1)).flatten()
+
+    # ==========================================
+    # ADIM 4: FINAL - BİRLEŞTİRME
+    # ==========================================
+    # Orijinal df'deki cols_to_fix sütunlarını yenileriyle güncelle
+    df[cols_to_fix] = df_imputed[cols_to_fix]
 
     # Kaydet
-    df_final.to_csv(output_name, index=False)
-    print(f"\nİŞLEM TAMAM! {existing_protected} sütunları korundu.")
-    print(f"Yeni Dosya: {output_name}")
+    df.to_csv(output_name, index=False)
+    print(f"\nBASARILI! {dont_touch} sutunlari korundu ve degismedi.")
+    print(f"Cikti Dosyasi: {output_name}")
 
 except Exception as e:
-    print(f"HATA: {e}")
+    print(f"\nHATA: {e}")
