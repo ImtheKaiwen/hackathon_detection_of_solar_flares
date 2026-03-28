@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solar Storm Watch | Hakkımızda</title>
+  <link rel="icon" type="image/jpeg" href="./static/img/sun-logo.jpeg" />
+  <link rel="stylesheet" href="./static/css/style.css" />
+</head>
+<body class="inner-page warm-inner-page">
+
+  <header class="site-header warm-solid-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <img src="assets/sun-logo.jpeg" alt="Logo" class="brand-logo" />
+        <span>SOLAR STORM WATCH</span>
+      </a>
+
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menüyü Aç/Kapat">
+        ☰
+      </button>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="index.html">Ana Sayfa</a>
+        <a href="info.html">Bilgiler</a>
+        <a href="dashboard.html">Canlı Veriler</a>
+        <a href="about.html" class="active">Hakkımızda</a>
+        <a href="login.html" class="nav-login">Giriş Yap</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <section class="page-hero warm-page-hero">
+      <div class="container">
+        <button class="back-btn" onclick="goBack()">← Geri</button>
+
+        <span class="section-tag">HAKKIMIZDA</span>
+        <h1>Vizyon, Misyon, Ekip ve İletişim</h1>
+        <p>
+          Solar Storm Watch, uzay havası ve güneş fırtınaları konusunda farkındalık oluşturmayı ve erken uyarı yaklaşımını
+          anlaşılır bir dijital deneyime dönüştürmeyi amaçlayan bir hackathon projesidir.
+        </p>
+      </div>
+    </section>
+
+    <section class="section warm-light-panel">
+      <div class="container">
+        <div class="feature-grid about-grid">
+          <div class="feature-card hot-card">
+            <div class="feature-meta">VİZYON</div>
+            <h3>Geleceğe Hazırlıklı Teknoloji</h3>
+            <p>
+              Uzay havası olaylarını sadece uzmanlara değil, herkesin anlayabileceği modern ve etkileyici bir platformda sunmak.
+            </p>
+          </div>
+
+          <div class="feature-card hot-card">
+            <div class="feature-meta">MİSYON</div>
+            <h3>Erken Uyarı Bilincini Yaymak</h3>
+            <p>
+              Güneş fırtınalarının etkilerini görünür kılarak iletişim, GPS, uydu ve teknoloji altyapıları için farkındalık oluşturmak.
+            </p>
+          </div>
+
+          <div class="feature-card hot-card">
+            <div class="feature-meta">EKİP</div>
+            <h3>Hackathon Takımı</h3>
+            <p>
+              Yazılım, veri, tasarım ve uzay temalı çözüm geliştirme odağıyla çalışan öğrenci takımı.
+            </p>
+          </div>
+        </div>
+
+        <div class="dashboard-panels about-contact-panel">
+          <div class="dashboard-card hot-surface">
+            <h2>Ekibimiz</h2>
+            <p>
+              Takımımız; web arayüzü, veri işleme, canlı panel tasarımı ve uzay havası farkındalık çözümü geliştirme üzerine çalışmaktadır.
+            </p>
+            <p>
+              Roller ekip içinde proje yönetimi, frontend geliştirme, veri modülü, API entegrasyonu ve sunum hazırlığı olarak bölünmüştür.
+            </p>
+          </div>
+
+          <div class="dashboard-card hot-surface">
+            <h2>İletişim</h2>
+            <p><strong>E-posta:</strong> solarstormwatchteam@gmail.com</p>
+            <p><strong>Destek:</strong> Sorular, iş birlikleri ve geri bildirimler için bizimle e-posta üzerinden iletişime geçebilirsiniz.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
