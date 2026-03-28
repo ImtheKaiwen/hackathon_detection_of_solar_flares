@@ -4,6 +4,5 @@ pymongo
 python-dotenv
 pytest
 scikit-learn
-tensorflow
 numpy
 pandas
