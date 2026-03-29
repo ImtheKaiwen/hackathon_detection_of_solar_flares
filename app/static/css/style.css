@@ -1144,3 +1144,320 @@ a {
     font-size: 0.9rem;
   }
 }
+
+/* DASHBOARD GRAFIK STYLESİ */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.chart-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chart-label-box {
+  padding: 16px;
+  background: rgba(255, 195, 70, 0.08);
+  border: 1px solid rgba(255, 195, 70, 0.16);
+  border-radius: 12px;
+}
+
+.chart-container {
+  padding: 22px;
+  position: relative;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-container canvas {
+  max-height: 400px;
+}
+
+/* Kontrol Paneli */
+.control-panel {
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.control-top {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.feature-info-box {
+  flex: 1;
+  min-width: 300px;
+  padding: 12px 16px;
+  background: rgba(255, 180, 0, 0.08);
+  border: 1px solid rgba(255, 180, 0, 0.24);
+  border-radius: 10px;
+}
+
+.feature-selection {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 20px;
+}
+
+.feature-selection h4 {
+  margin: 0 0 14px;
+}
+
+/* Feature Checkbox Stili */
+.feature-checkbox {
+  accent-color: var(--primary);
+  margin-right: 6px;
+  cursor: pointer;
+}
+
+.feature-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(255, 195, 70, 0.12);
+  border: 1px solid rgba(255, 195, 70, 0.24);
+  border-radius: 8px;
+  color: #ffe0b2;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.feature-label:hover {
+  background: rgba(255, 195, 70, 0.18);
+  border-color: rgba(255, 195, 70, 0.36);
+  transform: translateY(-2px);
+}
+
+.feature-label input:checked + * {
+  color: #ffd59a;
+}
+
+/* İstatistik Kartları */
+.statistic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.stat-card {
+  padding: 20px;
+}
+
+.stat-card h4 {
+  margin: 0 0 14px;
+  color: #fff5ea;
+  font-size: 1.12rem;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f4d8bf;
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-row span {
+  font-size: 0.9rem;
+  color: #ffe0c1;
+}
+
+.stat-row strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Tablo Stilleri */
+.table-container {
+  padding: 0;
+  overflow: hidden;
+}
+
+.table-controls {
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 195, 70, 0.04);
+}
+
+.search-input {
+  flex: 1;
+  min-width: 250px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 195, 70, 0.24);
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+  transition: 0.25s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: rgba(255, 195, 70, 0.48);
+  box-shadow: 0 0 0 3px rgba(255, 195, 70, 0.1);
+}
+
+.search-input::placeholder {
+  color: #ffe0c1;
+  opacity: 0.7;
+}
+
+.rows-select {
+  padding: 10px 12px;
+  background: rgba(255, 195, 70, 0.12);
+  border: 1px solid rgba(255, 195, 70, 0.24);
+  border-radius: 8px;
+  color: #ffe0b2;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+.rows-select:hover,
+.rows-select:focus {
+  background: rgba(255, 195, 70, 0.18);
+  border-color: rgba(255, 195, 70, 0.48);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table thead {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(90deg, rgba(255, 195, 70, 0.18), rgba(255, 195, 70, 0.08));
+  z-index: 10;
+}
+
+.data-table th {
+  padding: 12px 14px;
+  text-align: left;
+  color: #ffd59a;
+  font-weight: 700;
+  border-bottom: 2px solid rgba(255, 195, 70, 0.24);
+}
+
+.data-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: #f4d8bf;
+}
+
+.data-table tbody tr {
+  transition: 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+  background: rgba(255, 195, 70, 0.08);
+}
+
+.data-table tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.table-pagination {
+  padding: 16px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 195, 70, 0.04);
+}
+
+.pagination-btn {
+  padding: 8px 16px;
+  background: rgba(255, 195, 70, 0.12);
+  border: 1px solid rgba(255, 195, 70, 0.24);
+  border-radius: 8px;
+  color: #ffe0b2;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: rgba(255, 195, 70, 0.18);
+  transform: translateY(-2px);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Error Banner */
+.error-banner {
+  padding: 16px 20px;
+  background: rgba(255, 80, 80, 0.18);
+  border: 1px solid rgba(255, 80, 80, 0.36);
+  border-radius: 12px;
+  color: #ff9999;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .control-top {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .feature-info-box {
+    min-width: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input,
+  .rows-select {
+    width: 100%;
+  }
+
+  .data-table {
+    font-size: 0.85rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding: 8px 10px;
+  }
+}

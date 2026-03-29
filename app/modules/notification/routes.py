@@ -1,7 +1,9 @@
 import os
-from flask import Blueprint, request, jsonify
+import time
+from flask import Blueprint, request, jsonify,current_app
 from app.modules.notification.service import send_email_notification
 from app.extensions import db_manager
+from app.extensions import socketio
 
 notification_bp = Blueprint('notification', __name__, url_prefix='/notify')
 
@@ -24,7 +26,7 @@ def alert():
         activity_level = int(data['activity_level'])
 
     success_count = 0
-    subject = f"⚠️ KRİTİK: Güneş Aktivitesi %{activity_level}"
+    subject = f"KRİTİK: Güneş Aktivitesi %{activity_level}"
     content = f"Güneş aktivite seviyesi %{activity_level} eşiğini geçmiştir. Güvenli moda geçiliyor."
 
     for email in emails:
@@ -35,3 +37,17 @@ def alert():
         'status': True, 
         'message': f'İşlem bitti. {success_count} mail gönderildi.'
     })
+
+@notification_bp.route('/trigger-alert', methods=['GET', 'POST'])
+def trigger_alert():
+    alert_data = {
+        "title": "GÜNEŞ FIRTINASI TESPİT EDİLDİ!",
+        "message": "X-Sınıfı büyük bir patlama gerçekleşti. Jeomanyetik fırtına bekleniyor.",
+        "level": "Kritik",
+        "time": time.strftime("%H:%M:%S")
+    }
+    
+    # Tüm bağlı clientlere bildirim gönder
+    socketio.emit('solar_alert', alert_data, namespace='/')
+    
+    return jsonify({"status": "Başarılı", "message": "Bildirim tüm cihazlara fırlatıldı!"})

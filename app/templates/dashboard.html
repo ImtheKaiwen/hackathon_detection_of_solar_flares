@@ -6,6 +6,7 @@
   <title>Solar Storm Watch | Canlı Veriler</title>
   <link rel="icon" type="image/jpeg" href="../static/img/sun-logo.jpeg" />
   <link rel="stylesheet" href="../static/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body class="inner-page warm-inner-page">
 
@@ -33,53 +34,165 @@
   <main class="page-main">
     <section class="page-hero warm-page-hero">
       <div class="container">
-        
-
         <span class="section-tag">CANLI VERİ PANELİ</span>
         <h1>Gösterge Paneli</h1>
         <p>
-          Bu sayfa şu an demo verilerle çalışır. Daha sonra gerçek zamanlı API verileri ile dinamik hale getirilebilir.
+          Temizlenen güneş verilerinin gerçek zamanlı grafikli gösterimi. 
+          Otomatik olarak her 5 dakikada bir yenilenir.
         </p>
       </div>
     </section>
 
+    <!-- Hata Mesajı -->
+    <section class="section warm-light-panel" style="display: none;">
+      <div class="container">
+        <div id="errorMessage" class="error-banner"></div>
+      </div>
+    </section>
+
+    <!-- İstatistik Kartları -->
     <section class="section warm-light-panel">
       <div class="container">
-        <div class="dashboard-grid-page">
-          <div class="metric-card hot-card metric-big">
-            <span>Jeomanyetik Seviye</span>
-            <strong>G3</strong>
-          </div>
-
-          <div class="metric-card hot-card metric-big">
-            <span>Güneş Rüzgarı</span>
-            <strong>643 km/s</strong>
-          </div>
-
-          <div class="metric-card hot-card metric-big">
-            <span>Aktivite Durumu</span>
-            <strong>Yüksek</strong>
-          </div>
-
-          <div class="metric-card hot-card metric-big">
-            <span>Tahmini Risk</span>
-            <strong>Orta-Yüksek</strong>
-          </div>
+        <div class="bright-heading">
+          <h2>Veri İstatistikleri</h2>
+          <p>En son güneş flaklı verileri ve istatistikler</p>
         </div>
 
+        <div class="dashboard-grid-page">
+          <div class="metric-card hot-card metric-big">
+            <span>Toplam Veri Satırı</span>
+            <strong id="totalRows">--</strong>
+          </div>
+
+          <div class="metric-card hot-card metric-big">
+            <span>Aktif HARPNUM</span>
+            <strong id="totalSamples">--</strong>
+          </div>
+
+          <div class="metric-card hot-card metric-big">
+            <span>Son Güncelleme</span>
+            <strong id="lastUpdate" style="font-size: 0.9rem;">--:--:--</strong>
+          </div>
+
+          <div class="metric-card hot-card metric-big">
+            <span>Durum</span>
+            <strong style="color: #5eff5e;">✓ Aktif</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+   
+
+    <!-- Grafikler -->
+    <section class="section warm-light-panel">
+      <div class="container">
+        <div class="bright-heading">
+          <h2>Grafik Analizi</h2>
+          <p>Seçtiğiniz özelliklerin zaman içindeki değişimi ve güncel veriler</p>
+        </div>
+
+        <div class="charts-grid">
+          <!-- Zaman Serisi Grafiği -->
+          <div class="chart-wrapper">
+            <div class="chart-label-box">
+              <h4 style="margin: 0 0 8px; color: #fff5ea;"> Zaman Serisi Grafiği</h4>
+              <p style="margin: 0; font-size: 0.85rem; color: #ffe0c1;">
+                Seçtiğiniz özelliklerin son 60 saatteki trendini gösteren çizgi grafiği. 
+                Verilerin zaman içinde nasıl değiştiğini anlamak için kullanılır.
+              </p>
+            </div>
+            <div class="chart-container hot-surface">
+              <canvas id="timeSeriesChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Son Değerler Bar Grafiği -->
+          <div class="chart-wrapper">
+            <div class="chart-label-box">
+              <h4 style="margin: 0 0 8px; color: #fff5ea;">Güncel Değerler</h4>
+              <p style="margin: 0; font-size: 0.85rem; color: #ffe0c1;">
+                Seçtiğiniz özelliklerin en güncel değerlerini yatay bar grafiği olarak gösteren görselleştirme. 
+                Değerleri hızlı şekilde karşılaştırmanız için yararlıdır.
+              </p>
+            </div>
+            <div class="chart-container hot-surface">
+              <canvas id="latestValuesChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- İstatistik Kartları -->
+    <section class="section warm-light-panel">
+      <div class="container">
+        <div class="bright-heading">
+          <h2> Özellik Detayları</h2>
+          <p>Her özellikteki minimum, maksimum ve ortalama değerlerin istatistiksel analizi</p>
+        </div>
+
+        <div id="statisticCardsContainer" class="statistic-grid">
+          <!-- İstatistik kartları dinamik olarak yer alacak -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Tüm Veriler Tablosu -->
+    <section class="section warm-light-panel">
+      <div class="container">
+        <div class="bright-heading">
+          <h2> Tüm Veriler</h2>
+          <p>Şu anda gösterilen tüm temizlenmiş verilerin detaylı tablosu. Aşağı kaydırarak tüm değerleri inceleyebilirsiniz.</p>
+        </div>
+
+        <div class="table-container hot-surface">
+          <div class="table-controls">
+            
+          </div>
+
+          <div class="table-wrapper">
+            <table id="dataTable" class="data-table">
+              <thead>
+                <tr>
+                  <th>HARPNUM</th>
+                  <th>Zaman</th>
+                  <!-- Feature başlıkları dinamik olarak yer alacak -->
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+                <!-- Tablo satırları dinamik olarak yer alacak -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-pagination">
+            <button id="prevBtn" class="pagination-btn">← Önceki</button>
+            <span id="pageInfo" style="color: #ffe0c1; font-weight: 600;">Sayfa 1</span>
+            <button id="nextBtn" class="pagination-btn">Sonraki →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer Info -->
+    <section class="section warm-light-panel">
+      <div class="container">
         <div class="dashboard-panels">
           <div class="dashboard-card hot-surface">
-            <h2>Uyarı Durumu</h2>
+            <h2> Veriler Hakkında</h2>
             <p>
-              Mevcut demo veriler, orta ile yüksek arasında değişen jeomanyetik etki ihtimalini göstermektedir.
-              Gerçek veri bağlandığında bu alan otomatik olarak güncellenebilir.
+              Bu panelde gösterilen tüm veriler SHARP enstrümanından alınıp işlenmiş,
+              Güneş flaklı tahminleri için kullanabilecek temiz veri setleridir.
             </p>
           </div>
 
           <div class="dashboard-card hot-surface">
-            <h2>Kullanıcı Bilgisi</h2>
-            <p><strong>Ad Soyad:</strong> <span id="userName">Henüz giriş yapılmadı</span></p>
-            <p><strong>E-posta:</strong> <span id="userEmail">Henüz giriş yapılmadı</span></p>
+            <h2>Canlı Güncelleme</h2>
+            <p>
+              Veriler otomatik olarak her 5 dakikada bir yenilenir.
+              Manuel yenileme için "Verileri Yenile" butonunu kullanabilirsiniz.
+            </p>
           </div>
         </div>
       </div>
@@ -87,5 +200,6 @@
   </main>
 
   <script src="../static/js/app.js"></script>
+  <script src="../static/js/dashboard.js"></script>
 </body>
 </html>

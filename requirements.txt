@@ -13,3 +13,5 @@ requests
 drms
 torch
 APScheduler
+flask-socketio
+eventlet
