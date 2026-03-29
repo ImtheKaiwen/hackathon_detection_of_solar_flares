@@ -2,13 +2,30 @@ Flask
 Flask-Cors
 pymongo
 python-dotenv
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+pytest
+=======
+>>>>>>> Stashed changes
 pytest
 scikit-learn
 numpy
 pandas
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 joblib
 scipy
 tqdm
+>>>>>>> Stashed changes
+<<<<<<< Updated upstream
+=======
+=======
+requests
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 >>>>>>> Stashed changes

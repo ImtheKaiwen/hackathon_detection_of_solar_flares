@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, render_template
 from .service import register_user
+
 from app.extensions import db_manager
 
 user_bp = Blueprint("user", __name__)

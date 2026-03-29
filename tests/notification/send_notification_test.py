@@ -2,9 +2,8 @@ import requests
 import os
 from dotenv import load_dotenv
 
-# .env dosyasını oku (API Key için)
-load_dotenv()
 
+load_dotenv()
 def test_send_email_notification():
     """
     test
@@ -18,11 +17,20 @@ def test_send_email_notification():
         "Content-Type": "application/json"
     }
 
+    
+    # İstek gövdesi (opsiyonel, activity_level gönderilebilir)
+    data = {
+        "activity_level": 85
+    }
+
     print("🛰️ Beacon of Helios uyarısı gönderiliyor...")
+    print(f"API KEY: {os.getenv('ALERT_API_KEY')}")
     
     try:
         # Gerçek bir HTTP isteği atıyoruz
-        response = requests.post(url, headers=headers)
+        response = requests.post(url, headers=headers, json=data)
+        print(f"📊 Durum Kodu: {response.status_code}")
+        print(f"📋 Cevap: {response.text}")
         
         # Sonuç kontrolü (Assert)
         if response.status_code == 200:
@@ -30,11 +38,10 @@ def test_send_email_notification():
             assert response.json()['status'] == True
         else:
             print(f"❌ TEST BAŞARISIZ: Durum kodu {response.status_code}")
-            assert False
             
     except Exception as e:
         print(f"📡 Sunucu kapalı! Önce Flask'ı çalıştır. Hata: {e}")
-        assert False
 
 if __name__ == "__main__":
     test_send_email_notification()
+

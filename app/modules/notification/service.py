@@ -1,118 +1,140 @@
 import smtplib
-import os
-import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from app.extensions import db_manager
+import os
+from dotenv import load_dotenv
 
-def send_email_notification(to_email: str, subject: str, content: str, activity_level: int) -> bool:
+load_dotenv()
+
+SMTP_SERVER = os.getenv("SMTP_SERVER")
+SMTP_PORT = int(os.getenv("SMTP_PORT", "587"))
+SMTP_USERNAME = os.getenv("SMTP_USERNAME")
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")
+
+def send_email_notification(to_email: str, subject: str, content: str, activity_level: int = 70) -> bool:
     msg = MIMEMultipart()
     msg['From'] = os.getenv("SMTP_USERNAME")
     msg['To'] = to_email
     msg['Subject'] = subject
 
-    card_class = "warning" # Varsayılan %70+ (Kırmızı)
-    if activity_level >= 80: 
-        card_class = "danger" # %80+ (Koyu Kırmızı)
-
-    css_style = """
-    <style>
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #050510;
-            background-image: url('https://i.imgur.com/962LmyP.png');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            color: white; display: flex; align-items: center; justify-content: center;
-        }
-        .container {
-            display: flex; width: 90%; max-width: 1200px; min-height: 80vh;
-            background: rgba(10, 15, 25, 0.4); backdrop-filter: blur(8px);
-            border-radius: 20px; overflow: hidden; box-shadow: 0 0 40px rgba(0,0,0,0.9);
-            border: 1px solid rgba(255,255,255,0.05); margin: 40px auto;
-        }
-        .left-panel, .right-panel {
-            flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px;
-        }
-        .sun-logo {
-            max-width: 90%; max-height: 90%; object-fit: contain; border-radius: 50%;
-            filter: drop-shadow(0 0 30px rgba(251, 191, 36, 0.4)); 
-        }
-        .alert-card {
-            width: 100%; max-width: 450px; background: rgba(13, 17, 29, 0.95);
-            border-radius: 12px; overflow: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-        }
-        .alert-card.warning { border: 2px solid #ef4444; } 
-        .alert-card.danger { border: 2px solid #991b1b; } 
-        .card-header {
-            background-color: #000; text-align: center; padding: 30px 20px; border-bottom: 3px solid #f59e0b;
-        }
-        .card-header .icon { font-size: 28px; margin-bottom: 10px; }
-        .card-header h1 {
-            color: #fff; letter-spacing: 4px; font-size: 22px; font-weight: 900; margin: 0; text-transform: uppercase;
-        }
-        .card-body { padding: 40px 30px; text-align: center; }
-        .card-body h2 { color: #fbbf24; font-size: 19px; margin-top: 0; margin-bottom: 25px; letter-spacing: 1px; }
-        .alert-box {
-            background-color: rgba(255, 255, 255, 0.03); border-left: 4px solid #ef4444;
-            padding: 20px; margin-bottom: 25px; text-align: left;
-        }
-        .danger .alert-box { border-left-color: #991b1b; }
-        .warning .alert-box { border-left-color: #ef4444; }
-        .alert-box p { font-family: 'Courier New', monospace; font-size: 15px; margin: 0; line-height: 1.6; color: #fca5a5; }
-        .instruction { color: #94a3b8; font-size: 14px; margin-bottom: 30px; }
-        .status-badge {
-            display: inline-block; background-color: #ef4444; color: #fff;
-            padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: bold;
-        }
-        .danger .status-badge { background-color: #991b1b; }
-        .warning .status-badge { background-color: #ef4444; }
-        .card-footer { background-color: rgba(0,0,0,0.6); padding: 15px; text-align: center; font-size: 12px; color: #64748b; }
-        @media (max-width: 900px) {
-            .container { flex-direction: column; height: auto; margin: 20px; }
-            .left-panel { padding: 30px 20px 10px 20px; }
-            .sun-logo { max-width: 250px; }
-            .right-panel { padding: 10px 20px 30px 20px; }
-        }
-    </style>
-    """
-
-    # ✨ YENİ TASARIM
     html_template = f"""
     <!DOCTYPE html>
     <html lang="tr">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        {css_style}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beacon of Helios Alert</title>
+    <style>
+        body, html {{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            background: url('https://i.imgur.com/962LmyP.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }}
+
+        .container {{
+            display: flex;
+            flex-direction: row;
+            width: 90%;
+            max-width: 1000px;
+            min-height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: url('https://imgur.com/a/4k7w1Kb') no-repeat center center fixed;
+            background-size: cover;
+        }}
+
+        .left-panel {{
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+        }}
+
+        .sun-logo {{
+            max-width: 80%;
+            border-radius: 50%;
+        }}
+
+        .right-panel {{
+            flex: 1.2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 30px;
+        }}
+
+        .alert-card {{
+            width: 100%;
+            padding: 20px 25px;
+            border-radius: 8px;
+        }}
+
+        .alert-card h2 {{
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #ffffff;
+            padding: 5px;
+            border-radius: 8px;
+            width: fit-content;
+        }}
+
+        .alert-box {{
+            background-color: #0a1f3d;
+            padding: 15px;
+            font-size: 14px;
+            color: #cbd5e1;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }}
+
+        .status-badge {{
+            display: inline-block;
+            padding: 6px 12px;
+            background-color: #8a1e1e;
+            color: #ffffff;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 13px;
+        }}
+
+        .card-footer {{
+            text-align: center;
+            margin-top: 15px;
+            font-size: 12px;
+            color: #94a3b8;
+        }}
+
+        @media (max-width: 900px) {{
+            .container {{ flex-direction: column; }}
+            .left-panel, .right-panel {{ padding: 20px; }}
+        }}
+    </style>
     </head>
     <body>
-        <div class="container">
-            <div class="left-panel">
-                <img src="https://i.imgur.com/RosS0b0.jpeg" alt="Helios Sun Logo" class="sun-logo">
-            </div>
-            <div class="right-panel">
-                <div class="alert-card {card_class}"> 
-                    <div class="card-header">
-                        <div class="icon">🛰️</div>
-                        <h1>BEACON OF HELIOS</h1>
-                    </div>
-                    <div class="card-body">
-                        <h2>🚨 KRİTİK GÜNEŞ AKTİVİTESİ</h2>
-                        <div class="alert-box">
-                            <p>{content}</p>
-                        </div>
-                        <p class="instruction">Lütfen ROV ve diğer elektronik sistemleri güvenlik moduna alınız.</p>
-                        <div class="status-badge">
-                            Aktivite Seviyesi: %{activity_level}
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        © 2026 Beacon of Helios | Erken Uyarı Sistemi
-                    </div>
-                </div>
-            </div>
+    <div class="container">
+        <div class="left-panel">
+            <img src="https://i.imgur.com/RosS0b0.jpeg" alt="Logo" class="sun-logo">
         </div>
+        <div class="right-panel">
+            <div class="alert-card warning">
+                <h2>KRİTİK GÜNEŞ AKTİVİTESİ</h2>
+                <div class="alert-box">
+                    Güneş fırtınası algılandı. ROV ve diğer sistemleri güvenli moda alın.
+                </div>
+                <div class="status-badge">Aktivite Seviyesi: %{activity_level}</div>
+            </div>
+        
+        </div>
+    </div>
     </body>
     </html>
     """
@@ -130,13 +152,3 @@ def send_email_notification(to_email: str, subject: str, content: str, activity_
     except Exception as e:
         print(f"SMTP Hatası: {e}")
         return False
-    finally:
-        try:
-            log_col = db_manager.get_collection('notifications')
-            log_col.insert_one({
-                "recipient": to_email,
-                "sent_at": datetime.datetime.now(),
-                "delivery_status": status,
-                "activity_level": activity_level
-            })
-        except: pass
